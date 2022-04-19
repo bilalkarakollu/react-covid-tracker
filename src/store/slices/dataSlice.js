@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    data: [],
+    data: {},
     country: '',
     loading: true,
     error: ''
@@ -27,16 +27,18 @@ export const dataSlice = createSlice({
             state.country = action.payload
         }
     },
-    [fetchAsyncData.fulfilled]: (state, action) => {
-        state.data = action.payload;
-        state.loading = false;
-    },
-    [fetchAsyncData.pending]: (state) => {
-        state.loading = true;
-    },
-    [fetchAsyncData.rejected]: (state, action) => {
-        state.error = action.payload;
-        state.loading = false;
+    extraReducers: {
+        [fetchAsyncData.pending]: (state) => {
+            state.loading = true;
+        },
+        [fetchAsyncData.rejected]: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
+        [fetchAsyncData.fulfilled]: (state, action) => {
+            state.data = action.payload;
+            state.loading = false;
+        },
     }
 });
 
